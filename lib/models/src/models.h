@@ -13,7 +13,4 @@ struct Readings {
     Reading dht2;
 };
 
-const int minHumidity = 75;
-const int maxHumidity = 90;
-
 #endif

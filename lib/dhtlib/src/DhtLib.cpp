@@ -1,5 +1,11 @@
 #include "DhtLib.h"
-#include <FreeRTOS.h>
+#include <Arduino.h>
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <DHT_U.h>
+#include <map>
+#include <models.h>
+#include <queues.h>
 
 #define DHT1PIN 4
 #define DHT2PIN 5
@@ -7,11 +13,6 @@
 
 DHT_Unified dht1(DHT1PIN, DHTTYPE);
 DHT_Unified dht2(DHT2PIN, DHTTYPE);
-
-void initialiseDHTs() {
-  dht1.begin();
-  dht2.begin();
-}
 
 Reading readSensor(DHT_Unified dht) {
   sensors_event_t event;
@@ -32,9 +33,29 @@ Reading readSensor(DHT_Unified dht) {
   return dhtReading;
 }
 
-Readings readSensors() {
-  Readings both;
-  both.dht1 = readSensor(dht1);
-  both.dht2 = readSensor(dht2);
-  return both;
+void readSensors(void *argument) {
+  uint32_t tickDelay = pdMS_TO_TICKS(3000);
+  while (true)
+  {
+    Readings both;
+    both.dht1 = readSensor(dht1);
+    both.dht2 = readSensor(dht2);
+    xQueueSend(relayQueue, &both, portMAX_DELAY);
+    xQueueSend(lcdQueue, &both, portMAX_DELAY);
+    xQueueSend(postReadingsQueue, &both, portMAX_DELAY);
+    vTaskDelay(tickDelay);
+  }
+}
+
+void initialiseDHTs() {
+  dht1.begin();
+  dht2.begin();
+  xTaskCreate(
+    readSensors,    // Function that should be called
+    "DHT sensor reader",   // Name of the task (for debugging)
+    50000,            // Stack size (bytes)
+    NULL,            // Parameter to pass
+    1,               // Task priority
+    NULL             // Task handle
+  );
 }

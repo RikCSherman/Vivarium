@@ -2,24 +2,17 @@
 #include <WifiLib.h>
 #include <LcdLib.h>
 #include <RelayLib.h>
-#include <models.h>
-#include <iterator>
-
-uint32_t delayMS = 3000;
-
-RelayLib relaylib(33);
+#include <queues.h>
 
 void setup() {
   Serial.begin(115200);
-  initialiseDHTs();
+  initialiseQueues();
+  initialiseRelay(33);
   initialiseLCD();
-  connectToWifi();
+  intitialiseWifi();
+  initialiseDHTs();
 }
 
 void loop() {
-  delay(delayMS);
-  Readings readings = readSensors();
-  printReadingsToLCD(readings);
-  postReadingsToServer(readings);
-  relaylib.manageRelay(readings.dht1);
+  vTaskDelete(NULL);
 }

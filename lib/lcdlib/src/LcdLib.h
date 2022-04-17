@@ -7,6 +7,5 @@
 #include <models.h>
 
 void initialiseLCD();
-void printReadingsToLCD(Readings readings);
 
 #endif

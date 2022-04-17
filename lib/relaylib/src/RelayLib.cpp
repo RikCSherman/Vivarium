@@ -1,31 +1,61 @@
 #include "RelayLib.h"
 #include <Arduino.h>
+#include <queues.h>
 
-void RelayLib::switchRelayOff() {
+int _pin;
+String relayStatus;
+const int minHumidity = 50;
+const int maxHumidity = 90;
+
+
+void switchRelayOff() {
   digitalWrite(_pin, LOW);
-  _relayStatus = "OFF";
+  relayStatus = "OFF";
 }
 
-void RelayLib::switchRelayOn() {
+void switchRelayOn() {
   digitalWrite(_pin, HIGH);
-  _relayStatus = "ON";
+  relayStatus = "ON";
 }
 
-RelayLib::RelayLib(int pin)
-{
-  pinMode(pin, OUTPUT);
-  _pin = pin;
-  switchRelayOff();
+String getRelayStatus() {
+    return relayStatus;
 }
 
-String RelayLib::getRelayStatus() {
-    return _relayStatus;
-}
-
-void RelayLib::manageRelay(Reading reading) {
-    if (!reading.isError && reading.humidity < 50) {
+void manageRelay(Reading reading) {
+    if (!reading.isError && reading.humidity < minHumidity) {
       switchRelayOn();
     } else {
       switchRelayOff();
     }
+}
+
+void receive_Reading_Relay (void *argument)
+{
+	Reading received;
+	uint32_t TickDelay = pdMS_TO_TICKS(100);
+	while (true)
+	{
+		if (xQueueReceive(relayQueue, &received, portMAX_DELAY) != pdTRUE) {
+			Serial.println("Error in Receiving from Queue");
+		} else {
+      manageRelay(received);
+		}
+		vTaskDelay(TickDelay);
+	}
+}
+
+void initialiseRelay(int pin)
+{
+  pinMode(pin, OUTPUT);
+  _pin = pin;
+  switchRelayOff();
+  xTaskCreate(
+    receive_Reading_Relay,    // Function that should be called
+    "Receive Reading to Relay",   // Name of the task (for debugging)
+    50000,            // Stack size (bytes)
+    NULL,            // Parameter to pass
+    1,               // Task priority
+    NULL             // Task handle
+  );
 }
