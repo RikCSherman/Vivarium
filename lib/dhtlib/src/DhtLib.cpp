@@ -1,4 +1,5 @@
 #include "DhtLib.h"
+#include <FreeRTOS.h>
 
 #define DHT1PIN 4
 #define DHT2PIN 5
@@ -12,30 +13,28 @@ void initialiseDHTs() {
   dht2.begin();
 }
 
-readings readSensor(DHT_Unified dht) {
+Reading readSensor(DHT_Unified dht) {
   sensors_event_t event;
-  struct readings reading;
-  reading.isError = false;
+  struct Reading dhtReading;
+  dhtReading.isError = false;
   dht.temperature().getEvent(&event);
   if (isnan(event.temperature)) {
-    reading.isError = true;
+    dhtReading.isError = true;
   } else {
-    reading.temperature = event.temperature;
+    dhtReading.temperature = event.temperature;
   }
   dht.humidity().getEvent(&event);
   if (isnan(event.relative_humidity)) {
-    reading.isError = true;
+    dhtReading.isError = true;
   } else {
-    reading.humidity = event.relative_humidity;
+    dhtReading.humidity = event.relative_humidity;
   }
-  return reading;
+  return dhtReading;
 }
 
-std::map<int, readings> readSensors() {
-    readings reading1 = readSensor(dht1);
-    readings reading2 = readSensor(dht2);
-    std::map<int, readings> mapOfReadings;
-    mapOfReadings.insert(std::make_pair(0, reading1));
-    mapOfReadings.insert(std::make_pair(1, reading2));
-    return mapOfReadings;
+Readings readSensors() {
+  Readings both;
+  both.dht1 = readSensor(dht1);
+  both.dht2 = readSensor(dht2);
+  return both;
 }

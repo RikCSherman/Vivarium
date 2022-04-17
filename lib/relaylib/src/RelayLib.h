@@ -4,14 +4,10 @@
 #include <models.h>
 #include <Arduino.h>
 
-void initialiseRelay();
-
-void manageRelay(readings reading);
-
 class RelayLib {
     public: 
         RelayLib(int pin);
-        void manageRelay(readings reading);
+        void manageRelay(Reading reading);
         String getRelayStatus();
     private:
         int _pin;

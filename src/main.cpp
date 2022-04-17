@@ -18,11 +18,8 @@ void setup() {
 
 void loop() {
   delay(delayMS);
-  std::map<int, readings> readingMap = readSensors();
-  printReadingsToLCD(readingMap);
-  postReadingsToServer(readingMap);
-  std::map<int, readings>::iterator it = readingMap.find(0);
-  if (it != readingMap.end()) {
-    relaylib.manageRelay(it->second);
-  }
+  Readings readings = readSensors();
+  printReadingsToLCD(readings);
+  postReadingsToServer(readings);
+  relaylib.manageRelay(readings.dht1);
 }

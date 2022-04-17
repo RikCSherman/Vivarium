@@ -2,10 +2,15 @@
 #define MODELS_H
 
 
-struct readings {
+struct Reading {
     float humidity;
     float temperature;
     bool isError;
+};
+
+struct Readings {
+    Reading dht1;
+    Reading dht2;
 };
 
 const int minHumidity = 75;

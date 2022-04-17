@@ -8,7 +8,8 @@
 #include <map>
 #include <models.h>
 
+
 void initialiseDHTs();
-std::map<int, readings> readSensors();
+Readings readSensors();
 
 #endif

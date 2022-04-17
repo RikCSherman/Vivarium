@@ -5,7 +5,7 @@
 #include <map>
 
 void connectToWifi();
-void postReadingsToServer(std::map<int, readings> readingMap);
+void postReadingsToServer(Readings readings);
 
 
 #endif

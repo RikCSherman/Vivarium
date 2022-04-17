@@ -7,6 +7,6 @@
 #include <models.h>
 
 void initialiseLCD();
-void printReadingsToLCD(std::map<int, readings> readingMap);
+void printReadingsToLCD(Readings readings);
 
 #endif

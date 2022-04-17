@@ -1,7 +1,6 @@
 #include <WiFi.h>
 #include <secrets.h>
 #include "WifiLib.h"
-#include <iterator>
 
 
 void connectToWifi() {
@@ -17,22 +16,25 @@ void connectToWifi() {
   Serial.println("Connected to WiFi");
 }
 
-String generateJsonBody(std::map<int, readings> readingMap) {
+String generateReadingJson(int sensor_num, Reading reading) {
+  return "{ sensor: " + String(sensor_num) + ", temp: " + String(reading.temperature) + ", humidity: " + String(reading.humidity) + "}";
+}
+
+String generateJsonBody(Readings readings) {
   String output = "{ data: [";
-    std::map<int, readings>::iterator it = readingMap.begin();
-    while(it != readingMap.end())
-    {
-      if(it->second.isError) {
-        it++;
-      } else {
-        output = output + "{ sensor: " + it->first + ", temp: " + it->second.temperature + ", humidity: " + it->second.humidity + "},";
-        it++;
-      }
-    }
-  output = output.substring(0, output.length() - 1);
+  if (! readings.dht1.isError) {
+    output += generateReadingJson(0, readings.dht1);
+  }
+  if (! readings.dht1.isError && ! readings.dht2.isError) {
+    output += ", ";
+  }
+  if (! readings.dht2.isError) {
+    output += generateReadingJson(1, readings.dht2);
+  }
   return output + "]}";
 }
 
-void postReadingsToServer(std::map<int, readings> readingMap) {
-  String json = generateJsonBody(readingMap);
+void postReadingsToServer(Readings readings) {
+  String json = generateJsonBody(readings);
+  Serial.println(json);
 }

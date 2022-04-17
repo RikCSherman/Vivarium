@@ -22,7 +22,7 @@ String RelayLib::getRelayStatus() {
     return _relayStatus;
 }
 
-void RelayLib::manageRelay(readings reading) {
+void RelayLib::manageRelay(Reading reading) {
     if (!reading.isError && reading.humidity < 50) {
       switchRelayOn();
     } else {

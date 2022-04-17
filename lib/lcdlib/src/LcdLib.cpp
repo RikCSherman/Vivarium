@@ -16,7 +16,7 @@ void clearError(uint8_t sensor_num) {
     lcd.print("    ");
 }
 
-void printReadingsToLCD(uint8_t sensor_num, readings reading) {
+void printReadingsToLCD(uint8_t sensor_num, Reading reading) {
   if (reading.isError == true) {
     lcd.setCursor(0, 1 + sensor_num);
     lcd.print("Error reading sensor");
@@ -32,13 +32,9 @@ void printReadingsToLCD(uint8_t sensor_num, readings reading) {
   }
 }
 
-void printReadingsToLCD(std::map<int, readings> readingMap) {
+void printReadingsToLCD(Readings readings) {
     lcd.setCursor(0, 0);
     lcd.print("# Temp    Humidity");
-    std::map<int, readings>::iterator it = readingMap.begin();
-    while(it != readingMap.end())
-    {
-      printReadingsToLCD(it->first, it->second);
-      it++;
-    }
+    printReadingsToLCD(0, readings.dht1);
+    printReadingsToLCD(1, readings.dht2);
 }
