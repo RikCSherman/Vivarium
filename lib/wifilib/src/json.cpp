@@ -1,10 +1,9 @@
 #include <Arduino.h>
 #include "json.h"
-#include "wifilib_time.h"
 #include <utils.h>
 
 String generateReadingJson(int sensor_num, Reading reading) {
-  String json_reading = stringFormat("{ sensor: %d, temp: %.1f, humidity: %.1f, date_time: \"", sensor_num, reading.temperature, reading.humidity) + getTime().c_str() + "\"}";
+  String json_reading = stringFormat("{ sensor: %d, temp: %.1f, humidity: %.1f, date_time: \"", sensor_num, reading.temperature, reading.humidity) + reading.time + "\"}";
   return json_reading;
 }
 

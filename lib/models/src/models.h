@@ -5,6 +5,7 @@
 struct Reading {
     float humidity;
     float temperature;
+    String time;
     bool isError;
 };
 

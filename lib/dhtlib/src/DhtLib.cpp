@@ -6,6 +6,8 @@
 #include <map>
 #include <models.h>
 #include <queues.h>
+#include <utils.h>
+#include <wifilib_time.h>
 
 #define DHT1PIN 4
 #define DHT2PIN 5
@@ -30,6 +32,7 @@ Reading readSensor(DHT_Unified dht) {
   } else {
     dhtReading.humidity = event.relative_humidity;
   }
+  dhtReading.time = getTime();
   return dhtReading;
 }
 
