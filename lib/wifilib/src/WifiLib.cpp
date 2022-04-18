@@ -1,5 +1,6 @@
 #include "WifiLib.h"
 
+#include <HTTPClient.h>
 #include <WiFi.h>
 #include <models.h>
 #include <queues.h>
@@ -8,12 +9,22 @@
 #include "json.h"
 #include "wifilib_time.h"
 
+const String url = host + "/api/measurements";
+
 void postReadingsToServer(Readings readings) {
-    String json = generateJsonBody(readings);
-    Serial.println(json);
+    String jsonData = generateJsonBody(readings);
+    Serial.println(jsonData);
+    WiFiClient client;
+    HTTPClient http;
+    http.begin(client, url);
+    http.addHeader("Content-Type", "application/json", "Content-Length",
+                   jsonData.length());
+    http.setAuthorization(apiKey);
+    int httpResponseCode = http.POST(jsonData);
+    Serial.printf("Response code %d", httpResponseCode);
 }
 
-void receive_Reading_Wifi(void *argument) {
+void receive_Reading_Wifi(void* argument) {
     Readings received;
     uint32_t TickDelay = pdMS_TO_TICKS(100);
     while (true) {
