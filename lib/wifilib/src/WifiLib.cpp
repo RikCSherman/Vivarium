@@ -4,6 +4,7 @@
 #include <models.h>
 #include <queues.h>
 #include "json.h"
+#include "wifilib_time.h"
 
 void postReadingsToServer(Readings readings) {
   String json = generateJsonBody(readings);
@@ -36,6 +37,9 @@ void intitialiseWifi() {
     Serial.println("Connecting to WiFi...");
   }
   Serial.println("Connected to WiFi");
+  initialiseTime();
+  Serial.println(getTime());
+
   xTaskCreate(
     receive_Reading_Wifi,    // Function that should be called
     "Receive Reading to WIFI",   // Name of the task (for debugging)
