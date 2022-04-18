@@ -1,11 +1,9 @@
 #ifndef JSON_WIFI_H
 #define JSON_WIFI_H
 
-#include <Arduino.h>
+#include <ArduinoJson.h>
 #include <models.h>
 
-String generateReadingJson(int sensor_num, Reading reading);
-
-String generateJsonBody(Readings readings);
+DynamicJsonDocument generateJsonDocument(Readings readings);
 
 #endif

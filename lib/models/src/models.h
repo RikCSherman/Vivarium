@@ -2,8 +2,8 @@
 #define MODELS_H
 
 struct Reading {
-    float humidity;
-    float temperature;
+    double humidity;
+    double temperature;
     String time;
     bool isError;
 };

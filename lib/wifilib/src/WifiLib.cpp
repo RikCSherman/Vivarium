@@ -12,27 +12,30 @@
 const String url = host + "/api/measurements";
 
 void postReadingsToServer(Readings readings) {
-    String jsonData = generateJsonBody(readings);
+    DynamicJsonDocument jsonDoc = generateJsonDocument(readings);
+    char jsonData[1024];
+    serializeJson(jsonDoc, jsonData);
     Serial.println(jsonData);
     WiFiClient client;
     HTTPClient http;
     http.begin(client, url);
     http.addHeader("Content-Type", "application/json", "Content-Length",
-                   jsonData.length());
+                   String(jsonData).length());
     http.setAuthorization(apiKey);
     int httpResponseCode = http.POST(jsonData);
     Serial.printf("Response code %d", httpResponseCode);
 }
 
 void receive_Reading_Wifi(void* argument) {
-    Readings received;
+    Readings readings;
     uint32_t TickDelay = pdMS_TO_TICKS(100);
     while (true) {
-        if (xQueueReceive(postReadingsQueue, &received, portMAX_DELAY) !=
+        if (xQueueReceive(postReadingsQueue, &readings, portMAX_DELAY) !=
             pdTRUE) {
             Serial.println("Error in Receiving from  wifi Queue");
         } else {
-            postReadingsToServer(received);
+            if (!(readings.dht1.isError && readings.dht2.isError))
+                postReadingsToServer(readings);
         }
         vTaskDelay(TickDelay);
     }

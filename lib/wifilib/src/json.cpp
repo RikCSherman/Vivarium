@@ -1,28 +1,26 @@
 #include "json.h"
 
-#include <Arduino.h>
-#include <utils.h>
+double round1(double value) { return (int)(value * 10 + 0.5) / 10.0; }
 
-String generateReadingJson(int sensor_num, Reading reading) {
-    String json_reading =
-        stringFormat(
-            "{ \"sensor\": %d, \"temp\": %.1f, \"humidity\": %.1f, "
-            "\"date_time\": \"",
-            sensor_num, reading.temperature, reading.humidity) +
-        reading.time + "\"}";
-    return json_reading;
+void addReadingToJson(JsonArray array, int sensor, Reading reading) {
+    if (!reading.isError) {
+        JsonObject datum = array.createNestedObject();
+        datum["sensor"] = sensor;
+        datum["temperature"] = round1(reading.temperature);
+        datum["humidity"] = round1(reading.humidity);
+        datum["date_time"] = reading.time;
+    }
 }
 
-String generateJsonBody(Readings readings) {
-    String output = "{ \"data\": [";
+DynamicJsonDocument generateJsonDocument(Readings readings) {
+    int size = JSON_ARRAY_SIZE(2) + 3 * JSON_OBJECT_SIZE(4);
+    DynamicJsonDocument jsonDoc(size);
+    JsonArray data = jsonDoc.createNestedArray("data");
     if (!readings.dht1.isError) {
-        output += generateReadingJson(0, readings.dht1);
-    }
-    if (!readings.dht1.isError && !readings.dht2.isError) {
-        output += ", ";
+        addReadingToJson(data, 0, readings.dht1);
     }
     if (!readings.dht2.isError) {
-        output += generateReadingJson(1, readings.dht2);
+        addReadingToJson(data, 1, readings.dht2);
     }
-    return output + "]}";
+    return jsonDoc;
 }
