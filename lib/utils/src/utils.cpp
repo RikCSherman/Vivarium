@@ -1,9 +1,8 @@
 #include "utils.h"
 
-String stringFormat(const char *format, ...)
-{
+String stringFormat(const char *format, ...) {
     char loc_buf[64];
-    char * temp = loc_buf;
+    char *temp = loc_buf;
     va_list arg;
     va_list copy;
     va_start(arg, format);

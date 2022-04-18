@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <models.h>
+
 String generateReadingJson(int sensor_num, Reading reading);
 
 String generateJsonBody(Readings readings);

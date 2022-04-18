@@ -2,9 +2,10 @@
 #define LCDLIB_H
 
 #include <LiquidCrystal_I2C.h>
-#include <map>
-#include <iterator>
 #include <models.h>
+
+#include <iterator>
+#include <map>
 
 void initialiseLCD();
 
