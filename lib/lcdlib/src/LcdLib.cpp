@@ -37,9 +37,10 @@ void printReadingsToLCD(Readings readings) {
     printReadingsToLCD(1, readings.dht2);
 }
 
+const uint32_t TickDelay = pdMS_TO_TICKS(100);
+
 void receive_Reading(void *argument) {
     Readings received;
-    uint32_t TickDelay = pdMS_TO_TICKS(100);
     while (true) {
         if (xQueueReceive(lcdQueue, &received, portMAX_DELAY) != pdTRUE) {
             Serial.println("Error in Receiving from lcd Queue");

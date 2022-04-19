@@ -26,9 +26,10 @@ void postReadingsToServer(Readings readings) {
     Serial.printf("Response code %d", httpResponseCode);
 }
 
+const uint32_t TickDelay = pdMS_TO_TICKS(100);
+
 void receive_Reading_Wifi(void* argument) {
     Readings readings;
-    uint32_t TickDelay = pdMS_TO_TICKS(100);
     while (true) {
         if (xQueueReceive(postReadingsQueue, &readings, portMAX_DELAY) !=
             pdTRUE) {

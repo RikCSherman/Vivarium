@@ -37,8 +37,9 @@ Reading readSensor(DHT_Unified dht) {
     return dhtReading;
 }
 
+const uint32_t tickDelay = pdMS_TO_TICKS(3 * 1000);
+
 void readSensors(void *argument) {
-    uint32_t tickDelay = pdMS_TO_TICKS(3000);
     while (true) {
         Readings both;
         both.dht1 = readSensor(dht1);

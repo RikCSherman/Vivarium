@@ -28,9 +28,10 @@ void manageRelay(Reading reading) {
     }
 }
 
+const uint32_t TickDelay = pdMS_TO_TICKS(100);
+
 void receive_Reading_Relay(void *argument) {
     Reading received;
-    uint32_t TickDelay = pdMS_TO_TICKS(100);
     while (true) {
         if (xQueueReceive(relayQueue, &received, portMAX_DELAY) != pdTRUE) {
             Serial.println("Error in Receiving from Queue");
