@@ -5,14 +5,13 @@
 #include <DHT.h>
 #include <DHT_U.h>
 #include <models.h>
+#include <pins.h>
 #include <queues.h>
 #include <utils.h>
 #include <wifilib_time.h>
 
 #include <map>
 
-#define DHT1PIN 4
-#define DHT2PIN 5
 #define DHTTYPE DHT22
 
 DHT_Unified dht1(DHT1PIN, DHTTYPE);

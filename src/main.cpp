@@ -2,12 +2,13 @@
 #include <LcdLib.h>
 #include <RelayLib.h>
 #include <WifiLib.h>
+#include <pins.h>
 #include <queues.h>
 
 void setup() {
     Serial.begin(115200);
     initialiseQueues();
-    initialiseRelay(33);
+    initialiseRelay(HUMIDITY_RELAY_PIN);
     initialiseLCD();
     intitialiseWifi();
     initialiseDHTs();
