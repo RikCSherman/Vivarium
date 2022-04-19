@@ -3,6 +3,6 @@
 
 #include <Arduino.h>
 
-String stringFormat(const char *format, ...);
+String formatTime(tm timeinfo);
 
 #endif
