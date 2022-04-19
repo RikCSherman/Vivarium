@@ -3,8 +3,10 @@
 
 // I2C pins are 33 & 36
 
-#define DHT1PIN 4
-#define DHT2PIN 5
+#define DHT_1_PIN 4
+#define DHT_2_PIN 5
+#define DISTANCE_TRIGGER_PIN 16
+#define DISTANCE_RESULT_PIN 17
 #define HUMIDITY_RELAY_PIN 33
 
 #endif

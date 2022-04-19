@@ -9,4 +9,6 @@ extern xQueueHandle relayQueue;
 extern xQueueHandle lcdQueue;
 extern xQueueHandle postReadingsQueue;
 
+extern xQueueHandle waterDistanceQueue;
+
 #endif

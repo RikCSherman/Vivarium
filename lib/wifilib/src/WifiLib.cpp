@@ -26,8 +26,6 @@ void postReadingsToServer(Readings readings) {
     Serial.printf("Response code %d", httpResponseCode);
 }
 
-const uint32_t TickDelay = pdMS_TO_TICKS(100);
-
 void receive_Reading_Wifi(void* argument) {
     Readings readings;
     while (true) {
@@ -38,7 +36,7 @@ void receive_Reading_Wifi(void* argument) {
             if (!(readings.dht1.isError && readings.dht2.isError))
                 postReadingsToServer(readings);
         }
-        vTaskDelay(TickDelay);
+        taskYIELD();
     }
 }
 

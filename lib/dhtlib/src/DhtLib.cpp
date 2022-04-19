@@ -14,8 +14,8 @@
 
 #define DHTTYPE DHT22
 
-DHT_Unified dht1(DHT1PIN, DHTTYPE);
-DHT_Unified dht2(DHT2PIN, DHTTYPE);
+DHT_Unified dht1(DHT_1_PIN, DHTTYPE);
+DHT_Unified dht2(DHT_2_PIN, DHTTYPE);
 
 Reading readSensor(DHT_Unified dht) {
     sensors_event_t event;
