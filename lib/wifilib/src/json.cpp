@@ -6,7 +6,7 @@ void addReadingToJson(JsonArray array, int sensor, Reading reading) {
     if (!reading.isError) {
         JsonObject datum = array.createNestedObject();
         datum["sensor"] = sensor;
-        datum["temperature"] = round1(reading.temperature);
+        datum["temp"] = round1(reading.temperature);
         datum["humidity"] = round1(reading.humidity);
         datum["date_time"] = reading.time;
     }
