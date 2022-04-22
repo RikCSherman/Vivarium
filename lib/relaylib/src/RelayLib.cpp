@@ -38,7 +38,7 @@ void processReading(Reading reading) {
 }
 
 void processDistance(double distanceCM) {
-    Serial.printf("Distance = %.2fcm", distanceCM);
+    Serial.printf("Distance = %.2fcm\n", distanceCM);
     currentDistance = distanceCM;
     if (currentDistance > MAX_DISTANCE)
         switchRelayOff();

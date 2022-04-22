@@ -22,7 +22,7 @@ void postReadingsToServer(Readings readings) {
     http.addHeader("Content-Type", "application/json", "Content-Length", String(jsonData).length());
     http.setAuthorization(apiKey);
     int httpResponseCode = http.POST(jsonData);
-    Serial.printf("Response code %d", httpResponseCode);
+    Serial.printf("Response code %d\n", httpResponseCode);
 }
 
 void receive_Reading_Wifi(void* argument) {
