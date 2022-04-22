@@ -6,6 +6,7 @@ struct Reading {
     double temperature;
     String time;
     bool isError;
+    int error_count;
 };
 
 struct Readings {

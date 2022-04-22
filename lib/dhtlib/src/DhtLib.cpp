@@ -17,6 +17,9 @@
 DHT_Unified dht1(DHT_1_PIN, DHTTYPE);
 DHT_Unified dht2(DHT_2_PIN, DHTTYPE);
 
+int errorCountDht1 = 0;
+int errorCountDht2 = 0;
+
 Reading readSensor(DHT_Unified dht) {
     sensors_event_t event;
     struct Reading dhtReading;
@@ -37,13 +40,25 @@ Reading readSensor(DHT_Unified dht) {
     return dhtReading;
 }
 
-const uint32_t tickDelay = pdMS_TO_TICKS(3 * 1000);
+const uint32_t tickDelay = pdMS_TO_TICKS(5 * 1000);
 
 void readSensors(void *argument) {
     while (true) {
         Readings both;
         both.dht1 = readSensor(dht1);
+        if (both.dht1.isError) {
+            errorCountDht1++;
+        } else {
+            errorCountDht1 = 0;
+        }
+        both.dht1.error_count = errorCountDht1;
         both.dht2 = readSensor(dht2);
+        if (both.dht2.isError) {
+            errorCountDht2++;
+        } else {
+            errorCountDht2 = 0;
+        }
+        both.dht2.error_count = errorCountDht2;
         xQueueSend(relayQueue, &both, portMAX_DELAY);
         xQueueSend(lcdQueue, &both, portMAX_DELAY);
         xQueueSend(postReadingsQueue, &both, portMAX_DELAY);

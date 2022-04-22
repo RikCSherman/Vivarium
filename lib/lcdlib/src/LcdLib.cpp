@@ -1,6 +1,7 @@
 #include "LcdLib.h"
 
 #include <queues.h>
+#include <utils.h>
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
@@ -14,7 +15,7 @@ void clearError(uint8_t sensor_num) {
 }
 
 void printReadingsToLCD(uint8_t sensor_num, Reading reading) {
-    if (reading.isError == true) {
+    if (reading.isError == true && reading.error_count > MAX_ERRORS_ALLOWED) {
         lcd.setCursor(0, 1 + sensor_num);
         lcd.print("Error reading sensor");
     } else {

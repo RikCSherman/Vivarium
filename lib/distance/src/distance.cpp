@@ -2,7 +2,7 @@
 #include <pins.h>
 #include <queues.h>
 
-const uint32_t tickDelay = pdMS_TO_TICKS(60 * 100);
+const uint32_t tickDelay = pdMS_TO_TICKS(60 * 1000);
 
 void readDistanceCM(void *argument) {
     while (true) {

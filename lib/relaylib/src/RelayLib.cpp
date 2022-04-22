@@ -2,13 +2,15 @@
 
 #include <Arduino.h>
 #include <queues.h>
+#include <utils.h>
 
 int _pin;
 String relayStatus;
 const int MIN_HUMIDITY = 50;
 const int MAX_HUMIDITY = 90;
-const double MAX_DISTANCE = 12.5;
+const double MAX_DISTANCE = 17.5;
 double lastDistance = 99;
+Reading lastReading;
 
 void switchRelayOff() {
     digitalWrite(_pin, LOW);
@@ -24,9 +26,14 @@ String getRelayStatus() { return relayStatus; }
 
 boolean shouldSwitchRelayOn(Reading reading) {
     if (reading.isError) {
-        return false;
+        if (reading.error_count < MAX_ERRORS_ALLOWED)
+            return shouldSwitchRelayOn(lastReading);
+        else
+            return false;
+    } else {
+        lastReading = reading;
+        return reading.humidity < MIN_HUMIDITY && MAX_HUMIDITY < reading.humidity && lastDistance > MAX_DISTANCE;
     }
-    return reading.humidity < MIN_HUMIDITY && MAX_HUMIDITY < reading.humidity && lastDistance > MAX_DISTANCE;
 }
 
 void processReading(Reading reading) {
@@ -35,13 +42,6 @@ void processReading(Reading reading) {
     } else {
         switchRelayOff();
     }
-}
-
-void processDistance(double distanceCM) {
-    Serial.printf("Distance = %.2fcm\n", distanceCM);
-    lastDistance = distanceCM;
-    if (lastDistance > MAX_DISTANCE)
-        switchRelayOff();
 }
 
 void receive_Reading_Relay(void *argument) {
@@ -54,6 +54,13 @@ void receive_Reading_Relay(void *argument) {
         }
         taskYIELD();
     }
+}
+
+void processDistance(double distanceCM) {
+    Serial.printf("Distance = %.2fcm\n", distanceCM);
+    lastDistance = distanceCM;
+    if (lastDistance > MAX_DISTANCE)
+        switchRelayOff();
 }
 
 void receive_Distance_Relay(void *argument) {
@@ -72,6 +79,8 @@ void initialiseRelay(int pin) {
     pinMode(pin, OUTPUT);
     _pin = pin;
     switchRelayOff();
+    lastReading.error_count = 99;
+    lastReading.isError = true;
     xTaskCreate(receive_Distance_Relay,       // Function that should be called
                 "Receive Distance in Relay",  // Name of the task (for debugging)
                 5000,                         // Stack size (bytes)
