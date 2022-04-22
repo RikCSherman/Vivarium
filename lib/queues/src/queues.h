@@ -5,7 +5,7 @@
 
 void initialiseQueues();
 
-extern xQueueHandle relayQueue;
+extern xQueueHandle humidifierQueue;
 extern xQueueHandle lcdQueue;
 extern xQueueHandle postReadingsQueue;
 

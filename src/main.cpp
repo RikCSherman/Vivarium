@@ -8,10 +8,10 @@
 
 void setup() {
     Serial.begin(115200);
-    initialiseQueues();
-    initialiseRelay(HUMIDITY_RELAY_PIN);
-    initialiseLCD();
     intitialiseWifi();
+    initialiseQueues();
+    initialiseHumidifier();
+    initialiseLCD();
     initialiseDistanceSensor();
     initialiseDHTs();
 }

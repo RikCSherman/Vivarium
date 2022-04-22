@@ -40,7 +40,7 @@ Reading readSensor(DHT_Unified dht) {
     return dhtReading;
 }
 
-const uint32_t tickDelay = pdMS_TO_TICKS(5 * 1000);
+const uint32_t dhtReadingTickDelay = pdMS_TO_TICKS(5 * 1000);
 
 void readSensors(void *argument) {
     while (true) {
@@ -59,10 +59,10 @@ void readSensors(void *argument) {
             errorCountDht2 = 0;
         }
         both.dht2.error_count = errorCountDht2;
-        xQueueSend(relayQueue, &both, portMAX_DELAY);
+        xQueueSend(humidifierQueue, &both.dht1, portMAX_DELAY);
         xQueueSend(lcdQueue, &both, portMAX_DELAY);
         xQueueSend(postReadingsQueue, &both, portMAX_DELAY);
-        vTaskDelay(tickDelay);
+        vTaskDelay(dhtReadingTickDelay);
     }
 }
 

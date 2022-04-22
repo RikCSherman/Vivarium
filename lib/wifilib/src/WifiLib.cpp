@@ -22,7 +22,8 @@ void postReadingsToServer(Readings readings) {
     http.addHeader("Content-Type", "application/json", "Content-Length", String(jsonData).length());
     http.setAuthorization(apiKey);
     int httpResponseCode = http.POST(jsonData);
-    Serial.printf("Response code %d\n", httpResponseCode);
+    if (httpResponseCode != 201)
+        Serial.println("Upload of data failed");
 }
 
 void receive_Reading_Wifi(void* argument) {
@@ -50,7 +51,6 @@ void intitialiseWifi() {
     }
     Serial.println("Connected to WiFi");
     initialiseTime();
-    Serial.println(getTime());
 
     xTaskCreate(receive_Reading_Wifi,       // Function that should be called
                 "Receive Reading to WIFI",  // Name of the task (for debugging)

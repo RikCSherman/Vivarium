@@ -2,16 +2,16 @@
 
 #include <models.h>
 
-xQueueHandle relayQueue;
+xQueueHandle humidifierQueue;
 xQueueHandle lcdQueue;
 xQueueHandle postReadingsQueue;
 
 xQueueHandle waterDistanceQueue;
 
 void initialiseQueues() {
-    relayQueue = xQueueCreate(5, sizeof(Readings));
-    if (relayQueue == 0) {
-        Serial.println("Failed to create relay queue");
+    humidifierQueue = xQueueCreate(5, sizeof(Readings));
+    if (humidifierQueue == 0) {
+        Serial.println("Failed to create humidifier queue");
     }
     lcdQueue = xQueueCreate(5, sizeof(Readings));
     if (lcdQueue == 0) {
