@@ -8,7 +8,7 @@ String relayStatus;
 const int MIN_HUMIDITY = 50;
 const int MAX_HUMIDITY = 90;
 const double MAX_DISTANCE = 12.5;
-double currentDistance = 99;
+double lastDistance = 99;
 
 void switchRelayOff() {
     digitalWrite(_pin, LOW);
@@ -26,7 +26,7 @@ boolean shouldSwitchRelayOn(Reading reading) {
     if (reading.isError) {
         return false;
     }
-    return reading.humidity < MIN_HUMIDITY && MAX_HUMIDITY < reading.humidity && currentDistance > MAX_DISTANCE;
+    return reading.humidity < MIN_HUMIDITY && MAX_HUMIDITY < reading.humidity && lastDistance > MAX_DISTANCE;
 }
 
 void processReading(Reading reading) {
@@ -39,8 +39,8 @@ void processReading(Reading reading) {
 
 void processDistance(double distanceCM) {
     Serial.printf("Distance = %.2fcm\n", distanceCM);
-    currentDistance = distanceCM;
-    if (currentDistance > MAX_DISTANCE)
+    lastDistance = distanceCM;
+    if (lastDistance > MAX_DISTANCE)
         switchRelayOff();
 }
 

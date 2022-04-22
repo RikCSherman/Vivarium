@@ -2,7 +2,7 @@
 #include <pins.h>
 #include <queues.h>
 
-const uint32_t tickDelay = pdMS_TO_TICKS(60 * 1000);
+const uint32_t tickDelay = pdMS_TO_TICKS(60 * 100);
 
 void readDistanceCM(void *argument) {
     while (true) {
@@ -11,7 +11,8 @@ void readDistanceCM(void *argument) {
         digitalWrite(DISTANCE_TRIGGER_PIN, LOW);
         unsigned long duration_us = pulseIn(DISTANCE_RESULT_PIN, HIGH);
         double distanceCM = 0.017 * duration_us;
-        xQueueSend(waterDistanceQueue, &distanceCM, portMAX_DELAY);
+        if (distanceCM > 2.0)
+            xQueueSend(waterDistanceQueue, &distanceCM, portMAX_DELAY);
         vTaskDelay(tickDelay);
     }
 }
