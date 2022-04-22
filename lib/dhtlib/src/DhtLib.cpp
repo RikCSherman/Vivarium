@@ -56,7 +56,7 @@ void initialiseDHTs() {
     dht2.begin();
     xTaskCreate(readSensors,          // Function that should be called
                 "DHT sensor reader",  // Name of the task (for debugging)
-                50000,                // Stack size (bytes)
+                5000,                 // Stack size (bytes)
                 NULL,                 // Parameter to pass
                 1,                    // Task priority
                 NULL                  // Task handle

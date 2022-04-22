@@ -19,8 +19,7 @@ void postReadingsToServer(Readings readings) {
     WiFiClient client;
     HTTPClient http;
     http.begin(client, url);
-    http.addHeader("Content-Type", "application/json", "Content-Length",
-                   String(jsonData).length());
+    http.addHeader("Content-Type", "application/json", "Content-Length", String(jsonData).length());
     http.setAuthorization(apiKey);
     int httpResponseCode = http.POST(jsonData);
     Serial.printf("Response code %d", httpResponseCode);
@@ -29,8 +28,7 @@ void postReadingsToServer(Readings readings) {
 void receive_Reading_Wifi(void* argument) {
     Readings readings;
     while (true) {
-        if (xQueueReceive(postReadingsQueue, &readings, portMAX_DELAY) !=
-            pdTRUE) {
+        if (xQueueReceive(postReadingsQueue, &readings, portMAX_DELAY) != pdTRUE) {
             Serial.println("Error in Receiving from  wifi Queue");
         } else {
             if (!(readings.dht1.isError && readings.dht2.isError))
@@ -56,7 +54,7 @@ void intitialiseWifi() {
 
     xTaskCreate(receive_Reading_Wifi,       // Function that should be called
                 "Receive Reading to WIFI",  // Name of the task (for debugging)
-                50000,                      // Stack size (bytes)
+                5000,                       // Stack size (bytes)
                 NULL,                       // Parameter to pass
                 1,                          // Task priority
                 NULL                        // Task handle

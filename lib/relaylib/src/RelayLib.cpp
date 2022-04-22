@@ -74,14 +74,14 @@ void initialiseRelay(int pin) {
     switchRelayOff();
     xTaskCreate(receive_Distance_Relay,       // Function that should be called
                 "Receive Distance in Relay",  // Name of the task (for debugging)
-                50000,                        // Stack size (bytes)
+                5000,                         // Stack size (bytes)
                 NULL,                         // Parameter to pass
                 1,                            // Task priority
                 NULL                          // Task handle
     );
     xTaskCreate(receive_Reading_Relay,       // Function that should be called
                 "Receive Reading in Relay",  // Name of the task (for debugging)
-                50000,                       // Stack size (bytes)
+                5000,                        // Stack size (bytes)
                 NULL,                        // Parameter to pass
                 1,                           // Task priority
                 NULL                         // Task handle

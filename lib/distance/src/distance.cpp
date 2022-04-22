@@ -21,7 +21,7 @@ void initialiseDistanceSensor() {
     pinMode(DISTANCE_RESULT_PIN, INPUT);
     xTaskCreate(readDistanceCM,            // Function that should be called
                 "Distance sensor reader",  // Name of the task (for debugging)
-                50000,                     // Stack size (bytes)
+                5000,                      // Stack size (bytes)
                 NULL,                      // Parameter to pass
                 1,                         // Task priority
                 NULL                       // Task handle

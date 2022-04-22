@@ -52,12 +52,11 @@ void receive_Reading(void *argument) {
 void initialiseLCD() {
     lcd.init();
     lcd.backlight();
-    xTaskCreatePinnedToCore(
-        receive_Reading,           // Function that should be called
-        "Receive Reading to LCD",  // Name of the task (for debugging)
-        50000,                     // Stack size (bytes)
-        NULL,                      // Parameter to pass
-        3,                         // Task priority
-        NULL,                      // Task handle
-        1);
+    xTaskCreatePinnedToCore(receive_Reading,           // Function that should be called
+                            "Receive Reading to LCD",  // Name of the task (for debugging)
+                            5000,                      // Stack size (bytes)
+                            NULL,                      // Parameter to pass
+                            3,                         // Task priority
+                            NULL,                      // Task handle
+                            1);
 }
