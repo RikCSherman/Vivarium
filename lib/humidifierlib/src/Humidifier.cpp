@@ -1,4 +1,4 @@
-#include "RelayLib.h"
+#include "Humidifier.h"
 
 #include <Arduino.h>
 #include <models.h>
@@ -70,7 +70,7 @@ void receiveReading(void *argument) {
     Reading received;
     while (true) {
         if (xQueueReceive(humidifierQueue, &received, portMAX_DELAY) != pdTRUE) {
-            Serial.println("Error in Receiving from Relay Queue");
+            Serial.println("Error in Receiving from Humidifier Queue");
         } else {
             xSemaphoreTake(mutex, portMAX_DELAY);
             processReading(received);
@@ -116,7 +116,7 @@ void dontRunTooLong(void *argument) {
 }
 
 void initialiseHumidifier() {
-    _pin = HUMIDITY_RELAY_PIN;
+    _pin = HUMIDIFIER_RELAY_PIN;
     pinMode(_pin, OUTPUT);
     mutex = xSemaphoreCreateMutex();
     switchHumidifierOff();
