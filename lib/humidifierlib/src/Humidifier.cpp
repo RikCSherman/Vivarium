@@ -27,38 +27,44 @@ void switchHumidifierOff() {
     digitalWrite(_pin, LOW);
     humidifierStatus = HUMIDIFIER_OFF;
     humidifierSwitchedOffTime = esp_timer_get_time();
-    // Serial.println("Switching off");
+    if (LOGGING_ON)
+        Serial.println("Switching off");
 }
 
 void switchHumidifierOn() {
     digitalWrite(_pin, HIGH);
     humidifierStatus = HUMIDIFIER_ON;
     humidifierSwitchedOnTime = esp_timer_get_time();
-    // Serial.println("Switching on");
+    if (LOGGING_ON)
+        Serial.println("Switching on");
 }
 
 bool offLongEnough() {
     int offTime = esp_timer_get_time() - humidifierSwitchedOffTime;
     bool returnValue = offTime > MIN_HUMIDIFIER_OFF_TIME;
-    // Serial.printf("offLongEnough = %s\n", returnValue == true ? "True" : "False");
+    if (LOGGING_ON)
+        Serial.printf("offLongEnough = %s\n", returnValue == true ? "True" : "False");
     return returnValue;
 }
 
 bool lowHumidity(Reading reading) {
     bool returnValue = reading.humidity < MIN_HUMIDITY;
-    // Serial.printf("lowHumidity = %s\n", returnValue == true ? "True" : "False");
+    if (LOGGING_ON)
+        Serial.printf("lowHumidity = %s\n", returnValue == true ? "True" : "False");
     return returnValue;
 }
 
 bool temperatureNotLow(Reading reading) {
     bool returnValue = reading.temperature > MIN_TEMPERATURE;
-    // Serial.printf("temperatureNotLow = %s\n", returnValue == true ? "True" : "False");
+    if (LOGGING_ON)
+        Serial.printf("temperatureNotLow = %s\n", returnValue == true ? "True" : "False");
     return returnValue;
 }
 
 bool enoughWaterInResevoir() {
     bool returnValue = lastDistance < MAX_DISTANCE;
-    // Serial.printf("enoughWaterInResevoir = %s\n", returnValue == true ? "True" : "False");
+    if (LOGGING_ON)
+        Serial.printf("enoughWaterInResevoir = %s\n", returnValue == true ? "True" : "False");
     return returnValue;
 }
 
@@ -99,7 +105,8 @@ void receiveReading(void *argument) {
 void processDistance(double distanceCM) {
     lastDistance = distanceCM;
     if (humidifierStatus == HUMIDIFIER_ON && !enoughWaterInResevoir()) {
-        // Serial.println("Switching off due to distance");
+        if (LOGGING_ON)
+            Serial.println("Switching off due to distance");
         switchHumidifierOff();
     }
 }
@@ -125,7 +132,8 @@ void dontRunTooLong(void *argument) {
         xSemaphoreTake(mutex, portMAX_DELAY);
         if (humidifierStatus == HUMIDIFIER_ON &&
             (esp_timer_get_time() - humidifierSwitchedOnTime) > MAX_HUMIDIFIER_ON_TIME) {
-            // Serial.println("Switching off due to time");
+            if (LOGGING_ON)
+                Serial.println("Switching off due to time");
             switchHumidifierOff();
         }
         xSemaphoreGive(mutex);
