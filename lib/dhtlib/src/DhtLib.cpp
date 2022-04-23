@@ -40,7 +40,7 @@ Reading readSensor(DHT_Unified dht) {
     return dhtReading;
 }
 
-const uint32_t dhtReadingTickDelay = pdMS_TO_TICKS(5 * 1000);
+const uint32_t dhtReadingTickDelay = pdMS_TO_TICKS(15 * 1000);
 
 void readSensors(void *argument) {
     while (true) {
