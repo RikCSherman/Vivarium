@@ -11,9 +11,13 @@ void readDistanceCM(void *argument) {
         digitalWrite(DISTANCE_TRIGGER_PIN, LOW);
         unsigned long duration_us = pulseIn(DISTANCE_RESULT_PIN, HIGH);
         double distanceCM = 0.017 * duration_us;
+        Serial.printf("Distance %.2fcm\n", distanceCM);
         if (distanceCM > 2.0)
             xQueueSend(waterDistanceQueue, &distanceCM, portMAX_DELAY);
-        vTaskDelay(readEveryTickDelay);
+        else if (distanceCM == 0.0)
+            vTaskDelay(100);
+        else
+            vTaskDelay(readEveryTickDelay);
     }
 }
 
