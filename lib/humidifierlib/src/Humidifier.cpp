@@ -16,7 +16,7 @@ const int MIN_HUMIDITY = 70;
 const int MIN_TEMPERATURE = 24;
 const double MAX_DISTANCE = 18.5;
 const int MAX_HUMIDIFIER_ON_TIME = 15 * 60 * 1000 * 1000;
-const int MIN_HUMIDIFIER_OFF_TIME = 5 * 60 * 1000 * 1000;
+const int MIN_HUMIDIFIER_OFF_TIME = 1 * 60 * 1000 * 1000;
 
 double lastDistance = 99;
 Reading lastReading;
@@ -24,19 +24,23 @@ int64_t humidifierSwitchedOnTime;
 int64_t humidifierSwitchedOffTime;
 
 void switchHumidifierOff() {
-    digitalWrite(_pin, LOW);
-    humidifierStatus = HUMIDIFIER_OFF;
-    humidifierSwitchedOffTime = esp_timer_get_time();
-    if (LOGGING_ON)
-        Serial.println("Switching off");
+    if (humidifierStatus == HUMIDIFIER_ON) {
+        digitalWrite(_pin, LOW);
+        humidifierStatus = HUMIDIFIER_OFF;
+        humidifierSwitchedOffTime = esp_timer_get_time();
+        if (LOGGING_ON)
+            Serial.println("Switching off");
+    }
 }
 
 void switchHumidifierOn() {
-    digitalWrite(_pin, HIGH);
-    humidifierStatus = HUMIDIFIER_ON;
-    humidifierSwitchedOnTime = esp_timer_get_time();
-    if (LOGGING_ON)
-        Serial.println("Switching on");
+    if (humidifierStatus == HUMIDIFIER_OFF) {
+        digitalWrite(_pin, HIGH);
+        humidifierStatus = HUMIDIFIER_ON;
+        humidifierSwitchedOnTime = esp_timer_get_time();
+        if (LOGGING_ON)
+            Serial.println("Switching on");
+    }
 }
 
 bool offLongEnough() {
