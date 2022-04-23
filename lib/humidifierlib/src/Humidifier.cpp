@@ -14,7 +14,7 @@ SemaphoreHandle_t mutex;
 bool humidifierStatus;
 const int MIN_HUMIDITY = 70;
 const int MIN_TEMPERATURE = 24;
-const double MAX_DISTANCE = 17.5;
+const double MAX_DISTANCE = 18.5;
 const int MAX_HUMIDIFIER_ON_TIME = 5 * 60 * 1000 * 1000;
 const int MIN_HUMIDIFIER_OFF_TIME = 10 * 60 * 1000 * 1000;
 

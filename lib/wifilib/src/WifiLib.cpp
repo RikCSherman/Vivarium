@@ -23,7 +23,7 @@ void postReadingsToServer(Readings readings) {
     http.setAuthorization(apiKey);
     int httpResponseCode = http.POST(jsonData);
     if (httpResponseCode != 201)
-        Serial.println("Upload of data failed");
+        Serial.printf("Upload of data failed code = %d\n", httpResponseCode);
 }
 
 void receive_Reading_Wifi(void* argument) {
