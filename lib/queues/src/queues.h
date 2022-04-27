@@ -9,6 +9,4 @@ extern xQueueHandle humidifierQueue;
 extern xQueueHandle lcdQueue;
 extern xQueueHandle postReadingsQueue;
 
-extern xQueueHandle waterDistanceQueue;
-
 #endif

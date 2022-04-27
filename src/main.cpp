@@ -2,7 +2,6 @@
 #include <Humidifier.h>
 #include <LcdLib.h>
 #include <WifiLib.h>
-#include <distance.h>
 #include <pins.h>
 #include <queues.h>
 
@@ -12,7 +11,6 @@ void setup() {
     initialiseQueues();
     initialiseHumidifier();
     initialiseLCD();
-    initialiseDistanceSensor();
     initialiseDHTs();
 }
 
