@@ -1,6 +1,7 @@
 #include "Humidifier.h"
 
 #include <Arduino.h>
+#include <config.h>
 #include <models.h>
 #include <pins.h>
 #include <queues.h>
@@ -12,8 +13,6 @@
 int _pin;
 SemaphoreHandle_t mutex;
 bool humidifierStatus;
-const int MIN_HUMIDITY = 75;
-const int MIN_TEMPERATURE = 24;
 
 Reading lastReading;
 int64_t humidifierSwitchedOnTime;

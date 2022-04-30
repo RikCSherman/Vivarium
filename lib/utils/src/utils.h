@@ -4,6 +4,7 @@
 #define LOGGING_ON false
 
 #include <Arduino.h>
+#include <time.h>
 
 String formatTime(tm timeinfo);
 
