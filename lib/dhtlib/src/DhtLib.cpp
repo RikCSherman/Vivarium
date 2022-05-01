@@ -17,8 +17,8 @@
 DHT_Unified dht1(DHT_1_PIN, DHTTYPE);
 DHT_Unified dht2(DHT_2_PIN, DHTTYPE);
 
-int errorCountDht1 = 0;
-int errorCountDht2 = 0;
+int errorCountDht1 = 99;
+int errorCountDht2 = 99;
 
 Reading readSensor(DHT_Unified dht) {
     sensors_event_t event;
