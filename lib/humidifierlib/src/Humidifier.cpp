@@ -24,10 +24,12 @@ void switchHumidifierOff(bool isHumid, bool isCold, bool isError) {
         if (LOGGING_ON) {
             if (isError)
                 Serial.println("Switching off due to too many errors");
-            else if (isHumid)
-                Serial.println("Switching off as humid enough");
-            else if (isCold)
-                Serial.println("Switching off due to too cold");
+            else {
+                if (isHumid)
+                    Serial.println("Switching off as humid enough");
+                if (isCold)
+                    Serial.println("Switching off due to too cold");
+            }
         }
     }
 }
@@ -73,10 +75,14 @@ void processReading(Reading reading) {
         if (reading.error_count > MAX_ERRORS_ALLOWED) {
             switchHumidifierOff(false, false, true);
         }
-    } else if (humidityIsLow(reading) && temperatureIsNotTooLow(reading)) {
-        switchHumidifierOn();
     } else {
-        switchHumidifierOff(!humidityIsLow(reading), !temperatureIsNotTooLow(reading), false);
+        bool lowHumidity = humidityIsLow(reading);
+        bool tempIsOk = temperatureIsNotTooLow(reading);
+        if (lowHumidity && tempIsOk) {
+            switchHumidifierOn();
+        } else {
+            switchHumidifierOff(!lowHumidity, !tempIsOk, false);
+        }
     }
 }
 
@@ -101,7 +107,7 @@ void initialiseHumidifier() {
     switchHumidifierOff(false, false, false);
     humiditySettings[0].fromHour = 0;
     humiditySettings[0].humidity = 80;
-    humiditySettings[1].fromHour = 8;
+    humiditySettings[1].fromHour = 4;
     humiditySettings[1].humidity = 75;
     humiditySettings[2].fromHour = 15;
     humiditySettings[2].humidity = 70;
