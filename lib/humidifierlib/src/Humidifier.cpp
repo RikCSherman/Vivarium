@@ -14,15 +14,10 @@ int _pin;
 SemaphoreHandle_t mutex;
 bool humidifierStatus;
 
-Reading lastReading;
-int64_t humidifierSwitchedOnTime;
-int64_t humidifierSwitchedOffTime;
-
 void switchHumidifierOff() {
     if (humidifierStatus == HUMIDIFIER_ON) {
         digitalWrite(_pin, LOW);
         humidifierStatus = HUMIDIFIER_OFF;
-        humidifierSwitchedOffTime = esp_timer_get_time();
         if (LOGGING_ON)
             Serial.println("Switching off");
     }
@@ -32,43 +27,32 @@ void switchHumidifierOn() {
     if (humidifierStatus == HUMIDIFIER_OFF) {
         digitalWrite(_pin, HIGH);
         humidifierStatus = HUMIDIFIER_ON;
-        humidifierSwitchedOnTime = esp_timer_get_time();
         if (LOGGING_ON)
             Serial.println("Switching on");
     }
 }
 
-bool lowHumidity(Reading reading) {
+bool humidityIsLow(Reading reading) {
     bool returnValue = reading.humidity < MIN_HUMIDITY;
     if (LOGGING_ON)
         Serial.printf("lowHumidity = %s\n", returnValue == true ? "True" : "False");
     return returnValue;
 }
 
-bool temperatureNotLow(Reading reading) {
+bool temperatureIsNotTooLow(Reading reading) {
     bool returnValue = reading.temperature > MIN_TEMPERATURE;
     if (LOGGING_ON)
         Serial.printf("temperatureNotLow = %s\n", returnValue == true ? "True" : "False");
     return returnValue;
 }
 
-bool shouldSwitchHumidifierOn(Reading reading) {
-    if (reading.isError) {
-        if (reading.error_count < MAX_ERRORS_ALLOWED)
-            return shouldSwitchHumidifierOn(lastReading);
-        else
-            return false;
-    } else {
-        lastReading = reading;
-        return lowHumidity(reading) && temperatureNotLow(reading);  //&& enoughWaterInResevoir();
-    }
-}
-
 void processReading(Reading reading) {
-    if (shouldSwitchHumidifierOn(reading)) {
+    if (reading.isError) {
+        if (reading.error_count > MAX_ERRORS_ALLOWED) {
+            switchHumidifierOff();
+        }
+    } else if (humidityIsLow(reading) && temperatureIsNotTooLow(reading)) {
         switchHumidifierOn();
-    } else {
-        switchHumidifierOff();
     }
 }
 
@@ -91,9 +75,6 @@ void initialiseHumidifier() {
     pinMode(_pin, OUTPUT);
     mutex = xSemaphoreCreateMutex();
     switchHumidifierOff();
-    humidifierSwitchedOffTime = 0;  // so that it can turn on within 10 minutes of startup
-    lastReading.error_count = 99;
-    lastReading.isError = true;
     xTaskCreate(receiveReading,                   // Function that should be called
                 "Receive Reading in Humidifier",  // Name of the task (for debugging)
                 5000,                             // Stack size (bytes)
