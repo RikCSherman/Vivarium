@@ -4,5 +4,6 @@
 void initialiseTime();
 
 String getTime();
+tm getRawTime();
 
 #endif

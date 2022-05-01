@@ -14,4 +14,9 @@ struct Readings {
     Reading dht2;
 };
 
+struct TimeHumidityMap {
+    int fromHour;
+    int humidity;
+};
+
 #endif
