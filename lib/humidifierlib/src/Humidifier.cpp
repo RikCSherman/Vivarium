@@ -71,18 +71,12 @@ bool temperatureIsNotTooLow(Reading reading) {
 }
 
 void processReading(Reading reading) {
-    if (reading.isError) {
-        if (reading.error_count > MAX_ERRORS_ALLOWED) {
-            switchHumidifierOff(false, false, true);
-        }
+    bool lowHumidity = humidityIsLow(reading);
+    bool tempIsOk = temperatureIsNotTooLow(reading);
+    if (lowHumidity && tempIsOk) {
+        switchHumidifierOn();
     } else {
-        bool lowHumidity = humidityIsLow(reading);
-        bool tempIsOk = temperatureIsNotTooLow(reading);
-        if (lowHumidity && tempIsOk) {
-            switchHumidifierOn();
-        } else {
-            switchHumidifierOff(!lowHumidity, !tempIsOk, false);
-        }
+        switchHumidifierOff(!lowHumidity, !tempIsOk, false);
     }
 }
 

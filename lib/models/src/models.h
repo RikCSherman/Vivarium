@@ -5,13 +5,11 @@ struct Reading {
     double humidity;
     double temperature;
     String time;
-    bool isError;
-    int error_count;
 };
 
 struct Readings {
-    Reading dht1;
-    Reading dht2;
+    Reading bme1;
+    Reading bme2;
 };
 
 struct TimeHumidityMap {

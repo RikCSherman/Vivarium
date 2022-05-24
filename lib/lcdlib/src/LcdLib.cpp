@@ -15,27 +15,22 @@ void clearError(uint8_t sensor_num) {
 }
 
 void printReadingsToLCD(uint8_t sensor_num, Reading reading) {
-    if (reading.isError == true && reading.error_count > MAX_ERRORS_ALLOWED) {
-        lcd.setCursor(0, 1 + sensor_num);
-        lcd.print("Error reading sensor");
-    } else {
-        clearError(sensor_num);
-        lcd.setCursor(0, 1 + sensor_num);
-        lcd.print(sensor_num);
-        lcd.setCursor(2, 1 + sensor_num);
-        lcd.print(reading.temperature, 1);
-        lcd.printf("%cC", (char)223);
-        lcd.setCursor(10, 1 + sensor_num);
-        lcd.print(reading.humidity, 1);
-        lcd.print(" %");
-    }
+    clearError(sensor_num);
+    lcd.setCursor(0, 1 + sensor_num);
+    lcd.print(sensor_num);
+    lcd.setCursor(2, 1 + sensor_num);
+    lcd.print(reading.temperature, 1);
+    lcd.printf("%cC", (char)223);
+    lcd.setCursor(10, 1 + sensor_num);
+    lcd.print(reading.humidity, 1);
+    lcd.print(" %");
 }
 
 void printReadingsToLCD(Readings readings) {
     lcd.setCursor(0, 0);
     lcd.print("# Temp    Humidity");
-    printReadingsToLCD(0, readings.dht1);
-    printReadingsToLCD(1, readings.dht2);
+    printReadingsToLCD(0, readings.bme1);
+    printReadingsToLCD(1, readings.bme2);
 }
 
 void receive_Reading(void *argument) {
