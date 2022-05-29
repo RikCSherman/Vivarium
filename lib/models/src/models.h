@@ -9,7 +9,7 @@ struct Reading {
 
 struct Readings {
     Reading bme1;
-    Reading bme2;
+    // Reading bme2;
 };
 
 struct TimeHumidityMap {

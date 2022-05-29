@@ -5,6 +5,7 @@
 #include <models.h>
 #include <queues.h>
 #include <secrets.h>
+#include <utils.h>
 
 #include "json.h"
 #include "wifilib_time.h"
@@ -15,7 +16,9 @@ void postReadingsToServer(Readings readings) {
     DynamicJsonDocument jsonDoc = generateJsonDocument(readings);
     char jsonData[1024];
     serializeJson(jsonDoc, jsonData);
-    Serial.println(jsonData);
+    if (LOGGING_ON) {
+        Serial.println(jsonData);
+    }
     WiFiClient client;
     HTTPClient http;
     http.begin(client, url);

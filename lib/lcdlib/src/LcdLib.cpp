@@ -30,7 +30,7 @@ void printReadingsToLCD(Readings readings) {
     lcd.setCursor(0, 0);
     lcd.print("# Temp    Humidity");
     printReadingsToLCD(0, readings.bme1);
-    printReadingsToLCD(1, readings.bme2);
+    // printReadingsToLCD(1, readings.bme2);
 }
 
 void receive_Reading(void *argument) {

@@ -15,6 +15,6 @@ DynamicJsonDocument generateJsonDocument(Readings readings) {
     DynamicJsonDocument jsonDoc(size);
     JsonArray data = jsonDoc.createNestedArray("data");
     addReadingToJson(data, 0, readings.bme1);
-    addReadingToJson(data, 1, readings.bme2);
+    // addReadingToJson(data, 1, readings.bme2);
     return jsonDoc;
 }

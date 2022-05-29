@@ -9,9 +9,9 @@
 #include <wifilib_time.h>
 
 Adafruit_BME280 bme1;
-Adafruit_BME280 bme2;
+// Adafruit_BME280 bme2;
 
-Reading readSensor(Adafruit_BME280 bme) {
+Reading readSensor(Adafruit_BME280& bme) {
     sensors_event_t event;
     struct Reading reading;
     reading.temperature = bme.readTemperature();
@@ -22,11 +22,11 @@ Reading readSensor(Adafruit_BME280 bme) {
 
 const uint32_t readingTickDelay = pdMS_TO_TICKS(60 * 1000);
 
-void readSensors(void *argument) {
+void readSensors(void* argument) {
     while (true) {
         Readings both;
         both.bme1 = readSensor(bme1);
-        both.bme2 = readSensor(bme2);
+        // both.bme2 = readSensor(bme2);
         xQueueSend(humidifierQueue, &both.bme1, portMAX_DELAY);
         xQueueSend(lcdQueue, &both, portMAX_DELAY);
         xQueueSend(postReadingsQueue, &both, portMAX_DELAY);
@@ -35,8 +35,8 @@ void readSensors(void *argument) {
 }
 
 void initialiseBmes() {
-    bme1.begin(0x76);
-    bme2.begin(0x77);
+    bme1.begin(0x77);
+    // bme2.begin(0x76);
     xTaskCreate(readSensors,          // Function that should be called
                 "BME sensor reader",  // Name of the task (for debugging)
                 5000,                 // Stack size (bytes)
