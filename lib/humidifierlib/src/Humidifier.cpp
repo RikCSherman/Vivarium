@@ -17,19 +17,13 @@ bool humidifierStatus;
 
 struct TimeHumidityMap humiditySettings[4];
 
-void switchHumidifierOff(bool isHumid, bool isCold, bool isError) {
+void switchHumidifierOff(bool isHumid) {
     if (humidifierStatus == HUMIDIFIER_ON) {
         digitalWrite(_pin, LOW);
         humidifierStatus = HUMIDIFIER_OFF;
         if (LOGGING_ON) {
-            if (isError)
-                Serial.println("Switching off due to too many errors");
-            else {
-                if (isHumid)
-                    Serial.println("Switching off as humid enough");
-                if (isCold)
-                    Serial.println("Switching off due to too cold");
-            }
+            if (isHumid)
+                Serial.println("Switching off as humid enough");
         }
     }
 }
@@ -63,26 +57,12 @@ bool humidityIsLow(Reading reading) {
     return returnValue;
 }
 
-bool temperatureIsNotTooLow(Reading reading) {
-    bool returnValue = reading.temperature > MIN_TEMPERATURE;
-    // if (LOGGING_ON)
-    //     Serial.printf("temperatureNotLow = %s\n", returnValue == true ? "True" : "False");
-    return returnValue;
-}
-
 void processReading(Reading reading) {
-    if (reading.isError) {
-        if (reading.error_count > MAX_ERRORS_ALLOWED) {
-            switchHumidifierOff(false, false, true);
-        }
+    bool lowHumidity = humidityIsLow(reading);
+    if (lowHumidity) {
+        switchHumidifierOn();
     } else {
-        bool lowHumidity = humidityIsLow(reading);
-        bool tempIsOk = temperatureIsNotTooLow(reading);
-        if (lowHumidity && tempIsOk) {
-            switchHumidifierOn();
-        } else {
-            switchHumidifierOff(!lowHumidity, !tempIsOk, false);
-        }
+        switchHumidifierOff(!lowHumidity);
     }
 }
 
@@ -104,7 +84,7 @@ void initialiseHumidifier() {
     _pin = HUMIDIFIER_RELAY_PIN;
     pinMode(_pin, OUTPUT);
     mutex = xSemaphoreCreateMutex();
-    switchHumidifierOff(false, false, false);
+    switchHumidifierOff(false);
     humiditySettings[0].fromHour = 0;
     humiditySettings[0].humidity = 80;
     humiditySettings[1].fromHour = 4;

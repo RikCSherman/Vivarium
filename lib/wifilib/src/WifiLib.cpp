@@ -5,6 +5,7 @@
 #include <models.h>
 #include <queues.h>
 #include <secrets.h>
+#include <utils.h>
 
 #include "json.h"
 #include "wifilib_time.h"
@@ -15,7 +16,9 @@ void postReadingsToServer(Readings readings) {
     DynamicJsonDocument jsonDoc = generateJsonDocument(readings);
     char jsonData[1024];
     serializeJson(jsonDoc, jsonData);
-    Serial.println(jsonData);
+    if (LOGGING_ON) {
+        Serial.println(jsonData);
+    }
     WiFiClient client;
     HTTPClient http;
     http.begin(client, url);
@@ -32,8 +35,7 @@ void receive_Reading_Wifi(void* argument) {
         if (xQueueReceive(postReadingsQueue, &readings, portMAX_DELAY) != pdTRUE) {
             Serial.println("Error in Receiving from  wifi Queue");
         } else {
-            if (!(readings.dht1.isError && readings.dht2.isError))
-                postReadingsToServer(readings);
+            postReadingsToServer(readings);
         }
         taskYIELD();
     }
@@ -51,6 +53,7 @@ void intitialiseWifi() {
     }
     Serial.println("Connected to WiFi");
     initialiseTime();
+    getTime();
 
     xTaskCreate(receive_Reading_Wifi,       // Function that should be called
                 "Receive Reading to WIFI",  // Name of the task (for debugging)
