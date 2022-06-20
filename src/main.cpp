@@ -1,7 +1,7 @@
-#include <DhtLib.h>
 #include <Humidifier.h>
 #include <LcdLib.h>
 #include <WifiLib.h>
+#include <bme.h>
 #include <pins.h>
 #include <queues.h>
 
@@ -11,7 +11,7 @@ void setup() {
     initialiseQueues();
     initialiseHumidifier();
     initialiseLCD();
-    initialiseDHTs();
+    initialiseBmes();
 }
 
 void loop() { vTaskDelete(NULL); }
